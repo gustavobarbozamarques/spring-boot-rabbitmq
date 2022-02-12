@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app:
+    image: 'spring-boot-rabbitmq'
+    build:
+      context: .
+    container_name: spring-boot-rabbitmq
+    ports:
+      - 8080:8080
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+      - RABBITMQ_QUEUE=email_queue
+    networks:
+      - spring-boot-rabbitmq-network
+
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - spring-boot-rabbitmq-network
+
+networks:
+  spring-boot-rabbitmq-network:
+    driver: bridge
